@@ -58,8 +58,8 @@ export default class TaskValidator implements CoreValidator {
     if (requiredFieldErrors) return requiredFieldErrors;
 
     const dateFieldErrors = [
-      CommonValidator.validateDateField(task.startDate, 'start date'),
-      CommonValidator.validateDateField(task.dueDate, 'due date'),
+      CommonValidator.validateDateField(task.startDate, 'Start date'),
+      CommonValidator.validateDateField(task.dueDate, 'Due date'),
     ].find((error) => error !== null);
     if (dateFieldErrors) return dateFieldErrors;
 

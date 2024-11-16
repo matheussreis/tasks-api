@@ -1,7 +1,12 @@
 import { ObjectId } from 'mongodb';
 import { TaskService } from '../services';
+import { OrderBy } from '../services/core';
 import { Request, Response } from 'express';
 import { CoreValidator } from '../validators/core';
+
+type TaskOrderBy = OrderBy & {
+  fields: 'startDate' | 'doneDate' | 'dueDate';
+};
 
 export default class TaskController {
   private service: TaskService;
@@ -34,7 +39,15 @@ export default class TaskController {
     try {
       const limit = Number(req?.query.limit ?? 15);
       const offset = Number(req?.query.offset ?? 0);
-      const tasks = await this.service.list(limit, offset);
+      const order = req?.query.order ?? 'desc';
+      const by = req?.query.by ?? 'startDate';
+
+      const orderBy = {
+        field: by,
+        order: order,
+      } as TaskOrderBy;
+
+      const tasks = await this.service.list(limit, offset, orderBy);
       res.status(200).json({ count: tasks.length, tasks: { ...tasks } });
     } catch (error) {
       res.status(500).json({ message: 'Error fetching task' });

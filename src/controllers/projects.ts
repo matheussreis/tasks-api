@@ -1,8 +1,13 @@
 import { ObjectId } from 'mongodb';
 import { ProjectModel } from '../models';
+import { OrderBy } from '../services/core';
 import { Request, Response } from 'express';
 import { ProjectService } from '../services';
 import { CoreValidator } from '../validators/core';
+
+type ProjectOrderBy = OrderBy & {
+  fields: 'startDate' | 'dueDate';
+};
 
 export default class ProjectController {
   private service: ProjectService;
@@ -37,7 +42,15 @@ export default class ProjectController {
     try {
       const limit = Number(req?.query.limit ?? 15);
       const offset = Number(req?.query.offset ?? 0);
-      const projects = await this.service.list(limit, offset);
+      const order = req?.query.order ?? 'desc';
+      const by = req?.query.by ?? 'startDate';
+
+      const orderBy = {
+        field: by,
+        order: order,
+      } as ProjectOrderBy;
+
+      const projects = await this.service.list(limit, offset, orderBy);
       res
         .status(200)
         .json({ count: projects.length, projects: { ...projects } });

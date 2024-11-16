@@ -87,8 +87,8 @@ export default class ProjectValidator implements CoreValidator {
     if (requiredFieldErrors) return requiredFieldErrors;
 
     const dateFieldErrors = [
-      CommonValidator.validateDateField(project.startDate, 'start date'),
-      CommonValidator.validateDateField(project.dueDate, 'due date'),
+      CommonValidator.validateDateField(project.startDate, 'Start date'),
+      CommonValidator.validateDateField(project.dueDate, 'Due date'),
     ].find((error) => error !== null);
     if (dateFieldErrors) return dateFieldErrors;
 

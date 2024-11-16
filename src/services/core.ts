@@ -1,8 +1,13 @@
 import { ObjectId } from 'mongodb';
 
-export default interface CoreService<Model> {
+export type OrderBy = {
+  field: string;
+  order: 'desc' | 'asc';
+};
+
+export interface CoreService<Model> {
   create(model: Model): Promise<Model>;
-  list(limit: number, offset: number): Promise<Array<Model>>;
+  list(limit: number, offset: number, orderBy: OrderBy): Promise<Array<Model>>;
   update(model: Model): Promise<Model>;
   delete(id: ObjectId): Promise<void>;
   exists(id: ObjectId): Promise<boolean>;

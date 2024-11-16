@@ -1,7 +1,7 @@
-import CoreService from './core';
 import { ObjectId } from 'mongodb';
 import { ProjectModel } from '../models';
 import { DBUtils } from '../utils/database';
+import { CoreService, OrderBy } from './core';
 
 export default class ProjectService implements CoreService<ProjectModel> {
   private async getProjectCollection() {
@@ -19,12 +19,13 @@ export default class ProjectService implements CoreService<ProjectModel> {
     return project;
   }
 
-  async list(limit: number = 15, offset: number = 0) {
+  async list(limit: number = 15, offset: number = 0, orderBy: OrderBy) {
     const collection = await this.getProjectCollection();
     const projects = await collection
       .find()
       .skip(offset)
       .limit(limit)
+      .sort({ [orderBy.field]: orderBy.order === 'desc' ? -1 : 1 })
       .toArray();
 
     return projects;

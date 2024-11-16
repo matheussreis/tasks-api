@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import CoreService from './core';
+import { CoreService, OrderBy } from './core';
 import { TaskModel } from '../models';
 import { DBUtils } from '../utils/database';
 
@@ -19,9 +19,14 @@ export default class TaskService implements CoreService<TaskModel> {
     return task;
   }
 
-  async list(limit: number = 15, offset: number = 0) {
+  async list(limit: number = 15, offset: number = 0, orderBy: OrderBy) {
     const collection = await this.getTasksCollection();
-    const tasks = await collection.find().skip(offset).limit(limit).toArray();
+    const tasks = await collection
+      .find()
+      .skip(offset)
+      .limit(limit)
+      .sort({ [orderBy.field]: orderBy.order === 'desc' ? -1 : 1 })
+      .toArray();
     return tasks;
   }
 
