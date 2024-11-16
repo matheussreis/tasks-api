@@ -15,6 +15,10 @@ router.post('/', (req, res) => projectController.create(req, res));
 
 router.put('/:id', (req, res) => projectController.update(req, res));
 
+router.put('/:id/assign/:taskId', (req, res) =>
+  projectController.assignTask(req, res)
+);
+
 router.delete('/:id', (req, res) => projectController.remove(req, res));
 
 export default router;

@@ -23,6 +23,11 @@ export default class ProjectService implements CoreService<ProjectModel> {
     return project;
   }
 
+  async getById(id: ObjectId) {
+    const collection = await this.getProjectCollection();
+    return await collection.findOne({ _id: id });
+  }
+
   async list({ limit = 15, offset = 0, filter = {}, orderBy }) {
     const collection = await this.getProjectCollection();
     const projects = await collection

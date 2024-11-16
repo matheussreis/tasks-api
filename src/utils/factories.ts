@@ -16,6 +16,7 @@ export function makeProjectController() {
   const projectService = new ProjectService();
   const projectValidator = new ProjectValidator(projectService, taskService);
   const projectController = new ProjectController(
+    taskService,
     projectService,
     projectValidator
   );

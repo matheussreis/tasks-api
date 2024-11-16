@@ -2,7 +2,7 @@ import { ObjectId } from 'mongodb';
 import { ProjectModel } from '../models';
 import { OrderBy } from '../services/core';
 import { Request, Response } from 'express';
-import { ProjectService } from '../services';
+import { ProjectService, TaskService } from '../services';
 import { CoreValidator } from '../validators/core';
 
 type ProjectOrderBy = OrderBy & {
@@ -10,11 +10,17 @@ type ProjectOrderBy = OrderBy & {
 };
 
 export default class ProjectController {
-  private service: ProjectService;
+  private projectService: ProjectService;
+  private taskService: TaskService;
   private validator: CoreValidator;
 
-  constructor(service: ProjectService, validator: CoreValidator) {
-    this.service = service;
+  constructor(
+    taskService: TaskService,
+    projectService: ProjectService,
+    validator: CoreValidator
+  ) {
+    this.taskService = taskService;
+    this.projectService = projectService;
     this.validator = validator;
   }
 
@@ -31,7 +37,7 @@ export default class ProjectController {
 
       newProject.tasks = newProject.tasks.map((taskId) => new ObjectId(taskId));
 
-      const project = await this.service.create(newProject);
+      const project = await this.projectService.create(newProject);
       res.status(status).json({ ...project });
     } catch (error) {
       res.status(500).json({ message: 'Error creating project.' });
@@ -56,7 +62,7 @@ export default class ProjectController {
         order: order,
       } as ProjectOrderBy;
 
-      const projects = await this.service.list({
+      const projects = await this.projectService.list({
         limit,
         offset,
         orderBy,
@@ -75,7 +81,7 @@ export default class ProjectController {
   async update(req: Request, res: Response) {
     try {
       if (ObjectId.isValid(req.params.id) === false) {
-        res.status(400).json({ message: 'Invalid Task ID.' });
+        res.status(400).json({ message: 'Invalid Project ID.' });
         return;
       }
 
@@ -94,11 +100,11 @@ export default class ProjectController {
         return;
       }
 
-      const project = await this.service.update(projectToUpdate);
+      const project = await this.projectService.update(projectToUpdate);
 
       res.status(200).json({ ...project });
     } catch (error) {
-      res.status(500).json({ message: 'Error deleting project.' });
+      res.status(500).json({ message: 'Error updating project.' });
     }
   }
 
@@ -107,11 +113,11 @@ export default class ProjectController {
       const projectId = req.params.id;
 
       if (ObjectId.isValid(projectId) === false) {
-        res.status(400).json({ message: 'Invalid Task ID.' });
+        res.status(400).json({ message: 'Invalid Project ID.' });
         return;
       }
 
-      await this.service.remove(new ObjectId(projectId));
+      await this.projectService.remove(new ObjectId(projectId));
 
       res.status(200).json({ message: 'Project deleted successfully.' });
     } catch (error) {
@@ -140,7 +146,7 @@ export default class ProjectController {
         order: order,
       } as ProjectOrderBy;
 
-      const tasks = await this.service.getTasksByProject({
+      const tasks = await this.projectService.getTasksByProject({
         limit,
         offset,
         orderBy,
@@ -150,6 +156,50 @@ export default class ProjectController {
       res.status(200).json({ ...tasks });
     } catch (error) {
       res.status(500).json({ message: 'Error fetching projects.' });
+    }
+  }
+
+  async assignTask(req: Request, res: Response) {
+    try {
+      const { taskId, id: projectId } = req.params;
+
+      if (!ObjectId.isValid(taskId) || !ObjectId.isValid(projectId)) {
+        res.status(400).json({ message: 'Invalid Task or Project ID.' });
+        return;
+      }
+
+      const taskObjectId = new ObjectId(taskId);
+      const projectObjectId = new ObjectId(projectId);
+
+      const project = await this.projectService.getById(projectObjectId);
+      if (!project) {
+        res.status(404).json({ message: 'Project not found.' });
+        return;
+      }
+
+      const taskExists = await this.taskService.exists(taskObjectId);
+      if (!taskExists) {
+        res.status(404).json({ message: 'Task not found.' });
+        return;
+      }
+
+      const duplicatedTask = project.tasks.some((task) =>
+        task.equals(taskObjectId)
+      );
+
+      if (duplicatedTask) {
+        res.status(200).json({
+          message: 'Task is already assigned to this project.',
+        });
+        return;
+      }
+
+      project.tasks.push(taskObjectId);
+      const updatedProject = await this.projectService.update(project);
+
+      res.status(200).json(updatedProject);
+    } catch (error) {
+      res.status(500).json({ message: 'Error assigning task to project.' });
     }
   }
 }
