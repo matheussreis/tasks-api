@@ -67,4 +67,9 @@ export default class TaskService implements CoreService<TaskModel> {
     const task = await collection.findOne({ _id: taskId });
     return !!task;
   }
+
+  async getById(id: ObjectId) {
+    const collection = await this.getTasksCollection();
+    return await collection.findOne({ _id: id });
+  }
 }

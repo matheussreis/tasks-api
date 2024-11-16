@@ -1,6 +1,7 @@
 import { TaskModel } from '../models';
-import { TaskService } from '../services';
 import CommonValidator from './common';
+import { TaskService } from '../services';
+import { StatusEnum } from '../models/tasks';
 import { CoreValidator, ValidatorResult } from './core';
 
 export default class TaskValidator implements CoreValidator {
@@ -45,7 +46,9 @@ export default class TaskValidator implements CoreValidator {
       );
     }
 
-    if (task.status !== 'to-do' && task.status !== 'done') {
+    if (
+      Object.values(StatusEnum).includes(task.status as StatusEnum) === false
+    ) {
       return {
         status: 400,
         message: 'Status must be either "to-do" or "done"',

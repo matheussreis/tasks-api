@@ -2,6 +2,7 @@ import { ObjectId } from 'mongodb';
 import { TaskService } from '../services';
 import { OrderBy } from '../services/core';
 import { Request, Response } from 'express';
+import { StatusEnum } from '../models/tasks';
 import { CoreValidator } from '../validators/core';
 
 type TaskOrderBy = OrderBy & {
@@ -104,6 +105,39 @@ export default class TaskController {
       res.status(200).json({ message: 'Task deleted successfully.' });
     } catch (error) {
       res.status(500).json({ message: 'Error deleting task' });
+    }
+  }
+
+  async updateStatus(req: Request, res: Response) {
+    try {
+      const status = req.params.status as StatusEnum;
+
+      if (ObjectId.isValid(req.params.id) === false) {
+        res.status(400).json({ message: 'Invalid Task ID.' });
+        return;
+      }
+
+      if (Object.values(StatusEnum).includes(status) === false) {
+        res.status(400).json({
+          message: 'Status must be either "to-do" or "done"',
+        });
+        return;
+      }
+
+      const taskId = new ObjectId(req.params.id);
+      const task = await this.service.getById(taskId);
+      if (!task) {
+        res.status(404).json({
+          message: 'Task not found',
+        });
+        return;
+      }
+
+      task.status = status;
+      const updatedTask = await this.service.update(task);
+      res.status(200).json(updatedTask);
+    } catch (error) {
+      res.status(500).json({ message: 'Error updating task status' });
     }
   }
 }

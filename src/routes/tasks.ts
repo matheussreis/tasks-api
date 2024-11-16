@@ -11,6 +11,10 @@ router.post('/', (req, res) => taskController.create(req, res));
 
 router.put('/:id', (req, res) => taskController.update(req, res));
 
+router.put('/:id/change/:status', (req, res) =>
+  taskController.updateStatus(req, res)
+);
+
 router.delete('/:id', (req, res) => taskController.remove(req, res));
 
 export default router;
