@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 
-export default interface TasksModel {
+export default interface TaskModel {
   _id: ObjectId;
   title: string;
   description: string;

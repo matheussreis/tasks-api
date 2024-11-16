@@ -1,4 +1,4 @@
-import { TasksModel } from '../models';
+import { TaskModel } from '../models';
 import { TaskService } from '../services';
 import CommonValidator from './common';
 import { CoreValidator, ValidatorResult } from './core';
@@ -20,7 +20,7 @@ export default class TaskValidator implements CoreValidator {
   }
 
   async validate(
-    task: TasksModel,
+    task: TaskModel,
     isUpdate: boolean = false
   ): Promise<ValidatorResult> {
     if (!task) {
@@ -30,7 +30,7 @@ export default class TaskValidator implements CoreValidator {
       };
     }
 
-    const fieldValidation = CommonValidator.checkCollectionFields<TasksModel>(
+    const fieldValidation = CommonValidator.checkCollectionFields<TaskModel>(
       this.validFields,
       task
     );
@@ -38,7 +38,7 @@ export default class TaskValidator implements CoreValidator {
     if (fieldValidation) return { ...fieldValidation };
 
     if (isUpdate) {
-      return CommonValidator.checkExistingRecordOnUpdate<TasksModel>(
+      return CommonValidator.checkExistingRecordOnUpdate<TaskModel>(
         this.service,
         task._id
       );

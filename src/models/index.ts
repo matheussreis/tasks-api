@@ -1,4 +1,4 @@
-import TasksModel from './tasks';
+import TaskModel from './tasks';
 import ProjectModel from './projects';
 
-export { TasksModel, ProjectModel };
+export { TaskModel, ProjectModel };

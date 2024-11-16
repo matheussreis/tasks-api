@@ -1,6 +1,6 @@
 import { Collection } from 'mongodb';
-import { ProjectModel, TasksModel } from '../models';
+import { ProjectModel, TaskModel } from '../models';
 
 export type ProjectsCollection = Collection<ProjectModel>;
 
-export type TasksCollection = Collection<TasksModel>;
+export type TasksCollection = Collection<TaskModel>;

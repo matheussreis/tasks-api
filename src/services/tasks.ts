@@ -1,14 +1,14 @@
 import { ObjectId } from 'mongodb';
 import CoreService from './core';
-import { TasksModel } from '../models';
+import { TaskModel } from '../models';
 import { DBUtils } from '../utils/database';
 
-export default class TaskService implements CoreService<TasksModel> {
+export default class TaskService implements CoreService<TaskModel> {
   private async getTasksCollection() {
-    return await DBUtils.getCollection<TasksModel>('tasks');
+    return await DBUtils.getCollection<TaskModel>('tasks');
   }
 
-  async create(task: TasksModel) {
+  async create(task: TaskModel) {
     const collection = await this.getTasksCollection();
 
     task.startDate = new Date(task.startDate);
@@ -25,12 +25,12 @@ export default class TaskService implements CoreService<TasksModel> {
     return tasks;
   }
 
-  async update(task: TasksModel) {
+  async update(task: TaskModel) {
     const collection = await this.getTasksCollection();
 
     const existingTask = await collection.findOne({ _id: task._id });
 
-    const updatedTask = { ...existingTask, ...task } as TasksModel;
+    const updatedTask = { ...existingTask, ...task } as TaskModel;
 
     updatedTask.startDate = new Date(updatedTask.startDate);
     updatedTask.dueDate = new Date(updatedTask.dueDate);
