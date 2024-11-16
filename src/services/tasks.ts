@@ -40,8 +40,14 @@ export default class TaskService {
     return updatedTask;
   }
 
-  async delete(taskid: ObjectId) {
+  async delete(taskId: ObjectId) {
     const collection = await this.getTasksCollection();
-    await collection.findOneAndDelete({ _id: taskid });
+    await collection.findOneAndDelete({ _id: taskId });
+  }
+
+  async exists(taskId: ObjectId) {
+    const collection = await this.getTasksCollection();
+    const task = await collection.findOne({ _id: taskId });
+    return !!task;
   }
 }

@@ -16,7 +16,7 @@ export default class TaskController {
     try {
       const newTask = req.body.task;
 
-      const { status, message } = this.validator.validate(newTask);
+      const { status, message } = await this.validator.validate(newTask);
 
       if (status > 200) {
         res.status(status).json({ message });
@@ -50,7 +50,7 @@ export default class TaskController {
 
       const taskData = req.body.task ?? {};
 
-      const { status, message } = this.validator.validate(taskData, true);
+      const { status, message } = await this.validator.validate(taskData, true);
 
       if (status > 200) {
         res.status(status).json({ message });

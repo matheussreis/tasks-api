@@ -4,5 +4,5 @@ export interface ValidatorResult {
 }
 
 export interface CoreValidator {
-  validate: (input: any, isUpdate?: boolean) => ValidatorResult;
+  validate: (input: any, isUpdate?: boolean) => Promise<ValidatorResult>;
 }

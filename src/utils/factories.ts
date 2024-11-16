@@ -4,7 +4,7 @@ import { TaskController } from '../controllers';
 
 export function makeTaskController() {
   const taskService = new TaskService();
-  const taskValidator = new TaskValidator();
+  const taskValidator = new TaskValidator(taskService);
   const taskController = new TaskController(taskService, taskValidator);
 
   return taskController;

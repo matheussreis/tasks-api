@@ -1,7 +1,10 @@
 import { TasksModel } from '../models';
+import TaskService from '../services/tasks';
 import { CoreValidator, ValidatorResult } from './core';
 
 export default class TaskValidator implements CoreValidator {
+  private service: TaskService;
+
   private validFields = [
     'title',
     'description',
@@ -14,7 +17,14 @@ export default class TaskValidator implements CoreValidator {
     return !isNaN(date.getTime());
   }
 
-  validate(task: TasksModel, isUpdate: boolean = false): ValidatorResult {
+  constructor(service: TaskService) {
+    this.service = service;
+  }
+
+  async validate(
+    task: TasksModel,
+    isUpdate: boolean = false
+  ): Promise<ValidatorResult> {
     if (!task) {
       return {
         status: 400,
@@ -34,6 +44,14 @@ export default class TaskValidator implements CoreValidator {
     }
 
     if (isUpdate === true) {
+      const exists = await this.service.exists(task._id);
+      if (exists === false) {
+        return {
+          status: 404,
+          message: 'Task not found.',
+        };
+      }
+
       return {
         status: 200,
       };
