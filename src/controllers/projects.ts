@@ -71,7 +71,7 @@ export default class ProjectController {
 
       res.status(200).json({
         count: projects.length,
-        projects: { ...projects },
+        projects: [...projects],
       });
     } catch (error) {
       res.status(500).json({ message: 'Error fetching projects.' });

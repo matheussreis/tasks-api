@@ -72,7 +72,11 @@ export default class TaskController {
       } as TaskOrderBy;
 
       const tasks = await this.service.list({ limit, offset, orderBy, filter });
-      res.status(200).json({ count: tasks.length, tasks: { ...tasks } });
+
+      res.status(200).json({
+        count: tasks.length,
+        tasks: [...tasks],
+      });
     } catch (error) {
       res.status(500).json({ message: 'Error fetching task' });
     }
