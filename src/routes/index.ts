@@ -1,3 +1,4 @@
 import TaskRouter from './tasks';
+import ProjectRouter from './projects';
 
-export { TaskRouter };
+export { TaskRouter, ProjectRouter };

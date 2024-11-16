@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import { DBUtils } from './utils/database';
-import { TaskRouter } from './routes';
+import { ProjectRouter, TaskRouter } from './routes';
 
 dotenv.config();
 
@@ -14,6 +14,7 @@ DBUtils.connect()
     console.log('Connected to the database.');
 
     app.use('/api/task', TaskRouter);
+    app.use('/api/project', ProjectRouter);
   })
   .catch((error: Error) => {
     console.error('Failure connecting to the database.', error);

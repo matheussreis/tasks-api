@@ -1,3 +1,4 @@
 import TaskController from './tasks';
+import ProjectController from './projects';
 
-export { TaskController };
+export { ProjectController, TaskController };
