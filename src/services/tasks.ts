@@ -1,11 +1,15 @@
 import { ObjectId } from 'mongodb';
 import { CoreService } from './core';
-import { TaskModel } from '../models';
 import { DBUtils } from '../utils/database';
+import { ProjectModel, TaskModel } from '../models';
 
 export default class TaskService implements CoreService<TaskModel> {
   private async getTasksCollection() {
     return await DBUtils.getCollection<TaskModel>('tasks');
+  }
+
+  private async getProjectsCollection() {
+    return await DBUtils.getCollection<ProjectModel>('projects');
   }
 
   async create(task: TaskModel) {
@@ -47,8 +51,15 @@ export default class TaskService implements CoreService<TaskModel> {
   }
 
   async remove(taskId: ObjectId) {
-    const collection = await this.getTasksCollection();
-    await collection.findOneAndDelete({ _id: taskId });
+    const tasksCollection = await this.getTasksCollection();
+    const projectsCollection = await this.getProjectsCollection();
+
+    await projectsCollection.updateMany(
+      { tasks: { $in: [taskId] } },
+      { $pull: { tasks: taskId } }
+    );
+
+    await tasksCollection.findOneAndDelete({ _id: taskId });
   }
 
   async exists(taskId: ObjectId) {
