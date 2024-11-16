@@ -1,11 +1,15 @@
 import { ObjectId } from 'mongodb';
-import { ProjectModel } from '../models';
-import { DBUtils } from '../utils/database';
 import { CoreService } from './core';
+import { DBUtils } from '../utils/database';
+import { ProjectModel, TaskModel } from '../models';
 
 export default class ProjectService implements CoreService<ProjectModel> {
   private async getProjectCollection() {
     return await DBUtils.getCollection<ProjectModel>('projects');
+  }
+
+  private async getTaskCollection() {
+    return await DBUtils.getCollection<TaskModel>('tasks');
   }
 
   async create(project: ProjectModel) {
@@ -58,5 +62,33 @@ export default class ProjectService implements CoreService<ProjectModel> {
     const collection = await this.getProjectCollection();
     const project = await collection.findOne({ _id: projectId });
     return !!project;
+  }
+
+  async getTasksByProject({ limit = 15, offset = 0, orderBy, filter }) {
+    const taskCollection = await this.getTaskCollection();
+
+    filter = { ...filter, tasks: { $exists: true, $ne: [] } };
+    const projects = await this.list({ limit, offset, filter, orderBy });
+
+    const relatedTasks = await Promise.all(
+      projects.map(async (project) => {
+        const tasks = await taskCollection
+          .find({ _id: { $in: project.tasks } })
+          .toArray();
+
+        return {
+          [project._id.toString()]: {
+            title: project.title,
+            tasks: tasks,
+          },
+        };
+      })
+    );
+
+    const reshapedResult = relatedTasks.reduce((acc, projectTasks) => {
+      return { ...acc, ...projectTasks };
+    }, {});
+
+    return reshapedResult;
   }
 }

@@ -118,4 +118,38 @@ export default class ProjectController {
       res.status(500).json({ message: 'Error deleting project.' });
     }
   }
+
+  async findTasksByProject(req: Request, res: Response) {
+    try {
+      let filter = {};
+      const title = req?.query.title && `${req.query.title}`.trim();
+      const limit = Number(req?.query.limit ?? 15);
+      const offset = Number(req?.query.offset ?? 0);
+      const order = req?.query.order ?? 'desc';
+      const by = req?.query.by ?? 'startDate';
+
+      if (!title) {
+        res.status(400).json({ message: 'The project title is required.' });
+        return;
+      }
+
+      filter = { title: { $regex: new RegExp(title, 'i') } };
+
+      const orderBy = {
+        field: by,
+        order: order,
+      } as ProjectOrderBy;
+
+      const tasks = await this.service.getTasksByProject({
+        limit,
+        offset,
+        orderBy,
+        filter,
+      });
+
+      res.status(200).json({ ...tasks });
+    } catch (error) {
+      res.status(500).json({ message: 'Error fetching projects.' });
+    }
+  }
 }

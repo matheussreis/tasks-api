@@ -7,6 +7,10 @@ const projectController = makeProjectController();
 
 router.get('/', (req, res) => projectController.list(req, res));
 
+router.get('/tasks-by-name', (req, res) =>
+  projectController.findTasksByProject(req, res)
+);
+
 router.post('/', (req, res) => projectController.create(req, res));
 
 router.put('/:id', (req, res) => projectController.update(req, res));
