@@ -1,21 +1,19 @@
 import { TasksModel } from '../models';
-import TaskService from '../services/tasks';
+import { TaskService } from '../services';
+import CommonValidator from './common';
 import { CoreValidator, ValidatorResult } from './core';
 
 export default class TaskValidator implements CoreValidator {
   private service: TaskService;
 
   private validFields = [
+    '_id',
     'title',
     'description',
     'status',
     'startDate',
     'dueDate',
   ];
-
-  private isValidDate(date: Date) {
-    return !isNaN(date.getTime());
-  }
 
   constructor(service: TaskService) {
     this.service = service;
@@ -32,43 +30,18 @@ export default class TaskValidator implements CoreValidator {
       };
     }
 
-    const invalidFields = Object.keys(task).filter(
-      (key) => !this.validFields.includes(key)
+    const fieldValidation = CommonValidator.checkCollectionFields<TasksModel>(
+      this.validFields,
+      task
     );
 
-    if (invalidFields.length > 0) {
-      return {
-        status: 400,
-        message: `Invalid fields provided: ${invalidFields.join(', ')}`,
-      };
-    }
+    if (fieldValidation) return { ...fieldValidation };
 
-    if (isUpdate === true) {
-      const exists = await this.service.exists(task._id);
-      if (exists === false) {
-        return {
-          status: 404,
-          message: 'Task not found.',
-        };
-      }
-
-      return {
-        status: 200,
-      };
-    }
-
-    if (!task.title || `${task.title}`.trim().length === 0) {
-      return {
-        status: 400,
-        message: 'Title is required.',
-      };
-    }
-
-    if (!task.description || `${task.description}`.trim().length === 0) {
-      return {
-        status: 400,
-        message: 'Description is required.',
-      };
+    if (isUpdate) {
+      return CommonValidator.checkExistingRecordOnUpdate<TasksModel>(
+        this.service,
+        task._id
+      );
     }
 
     if (task.status !== 'to-do' && task.status !== 'done') {
@@ -78,21 +51,17 @@ export default class TaskValidator implements CoreValidator {
       };
     }
 
-    const startDate = new Date(task?.startDate);
-    if (this.isValidDate(startDate) === false) {
-      return {
-        status: 400,
-        message: 'Invalid start date for task.',
-      };
-    }
+    const requiredFieldErrors = [
+      CommonValidator.validateRequiredField(task.title, 'Title'),
+      CommonValidator.validateRequiredField(task.description, 'Description'),
+    ].find((error) => error !== null);
+    if (requiredFieldErrors) return requiredFieldErrors;
 
-    const dueDate = new Date(task?.dueDate);
-    if (this.isValidDate(dueDate) === false) {
-      return {
-        status: 400,
-        message: 'Invalid due date for task.',
-      };
-    }
+    const dateFieldErrors = [
+      CommonValidator.validateDateField(task.startDate, 'start date'),
+      CommonValidator.validateDateField(task.dueDate, 'due date'),
+    ].find((error) => error !== null);
+    if (dateFieldErrors) return dateFieldErrors;
 
     return {
       status: 200,

@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import TaskService from '../services/tasks';
+import { TaskService } from '../services';
 import { Request, Response } from 'express';
 import { CoreValidator } from '../validators/core';
 
@@ -48,19 +48,20 @@ export default class TaskController {
         return;
       }
 
-      const taskData = req.body.task ?? {};
+      const taskToUpdate = {
+        _id: new ObjectId(req.params.id),
+        ...(req.body.task ?? {}),
+      };
 
-      const { status, message } = await this.validator.validate(taskData, true);
+      const { status, message } = await this.validator.validate(
+        taskToUpdate,
+        true
+      );
 
       if (status > 200) {
         res.status(status).json({ message });
         return;
       }
-
-      const taskToUpdate = {
-        _id: new ObjectId(req.params.id),
-        ...taskData,
-      };
 
       const task = await this.service.update(taskToUpdate);
 

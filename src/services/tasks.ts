@@ -1,8 +1,9 @@
 import { ObjectId } from 'mongodb';
+import CoreService from './core';
 import { TasksModel } from '../models';
 import { DBUtils } from '../utils/database';
 
-export default class TaskService {
+export default class TaskService implements CoreService<TasksModel> {
   private async getTasksCollection() {
     return await DBUtils.getCollection<TasksModel>('tasks');
   }
