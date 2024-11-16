@@ -84,7 +84,7 @@ export default class TaskController {
     }
   }
 
-  async delete(req: Request, res: Response) {
+  async remove(req: Request, res: Response) {
     try {
       const taskId = req.params.id;
 
@@ -93,7 +93,7 @@ export default class TaskController {
         return;
       }
 
-      await this.service.delete(new ObjectId(taskId));
+      await this.service.remove(new ObjectId(taskId));
 
       res.status(200).json({ message: 'Task deleted successfully.' });
     } catch (error) {

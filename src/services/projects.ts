@@ -49,7 +49,7 @@ export default class ProjectService implements CoreService<ProjectModel> {
     return updatedProject;
   }
 
-  async delete(projectId: ObjectId) {
+  async remove(projectId: ObjectId) {
     const collection = await this.getProjectCollection();
     await collection.findOneAndDelete({ _id: projectId });
   }

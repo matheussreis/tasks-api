@@ -46,7 +46,7 @@ export default class TaskService implements CoreService<TaskModel> {
     return updatedTask;
   }
 
-  async delete(taskId: ObjectId) {
+  async remove(taskId: ObjectId) {
     const collection = await this.getTasksCollection();
     await collection.findOneAndDelete({ _id: taskId });
   }

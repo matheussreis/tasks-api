@@ -11,6 +11,6 @@ router.post('/', (req, res) => projectController.create(req, res));
 
 router.put('/:id', (req, res) => projectController.update(req, res));
 
-router.delete('/:id', (req, res) => projectController.delete(req, res));
+router.delete('/:id', (req, res) => projectController.remove(req, res));
 
 export default router;

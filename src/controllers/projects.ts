@@ -89,7 +89,7 @@ export default class ProjectController {
     }
   }
 
-  async delete(req: Request, res: Response) {
+  async remove(req: Request, res: Response) {
     try {
       const projectId = req.params.id;
 
@@ -98,7 +98,7 @@ export default class ProjectController {
         return;
       }
 
-      await this.service.delete(new ObjectId(projectId));
+      await this.service.remove(new ObjectId(projectId));
 
       res.status(200).json({ message: 'Project deleted successfully.' });
     } catch (error) {
