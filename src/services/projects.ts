@@ -1,14 +1,14 @@
 import CoreService from './core';
 import { ObjectId } from 'mongodb';
-import { ProjectsModel } from '../models';
+import { ProjectModel } from '../models';
 import { DBUtils } from '../utils/database';
 
-export default class ProjectService implements CoreService<ProjectsModel> {
+export default class ProjectService implements CoreService<ProjectModel> {
   private async getProjectCollection() {
-    return await DBUtils.getCollection<ProjectsModel>('projects');
+    return await DBUtils.getCollection<ProjectModel>('projects');
   }
 
-  async create(project: ProjectsModel) {
+  async create(project: ProjectModel) {
     const collection = await this.getProjectCollection();
 
     project.startDate = new Date(project.startDate);
@@ -30,7 +30,7 @@ export default class ProjectService implements CoreService<ProjectsModel> {
     return projects;
   }
 
-  async update(project: ProjectsModel) {
+  async update(project: ProjectModel) {
     const collection = await this.getProjectCollection();
 
     const existingProject = await collection.findOne({ _id: project._id });
@@ -38,7 +38,7 @@ export default class ProjectService implements CoreService<ProjectsModel> {
     const updatedProject = {
       ...existingProject,
       ...project,
-    } as ProjectsModel;
+    } as ProjectModel;
 
     updatedProject.startDate = new Date(updatedProject.startDate);
     updatedProject.dueDate = new Date(updatedProject.dueDate);

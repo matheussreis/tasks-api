@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { ProjectsModel } from '../models';
+import { ProjectModel } from '../models';
 import { ProjectService, TaskService } from '../services';
 import { CoreValidator, ValidatorResult } from './core';
 import CommonValidator from './common';
@@ -53,7 +53,7 @@ export default class ProjectValidator implements CoreValidator {
   }
 
   async validate(
-    project: ProjectsModel,
+    project: ProjectModel,
     isUpdate: boolean = false
   ): Promise<ValidatorResult> {
     if (!project) {
@@ -63,11 +63,10 @@ export default class ProjectValidator implements CoreValidator {
       };
     }
 
-    const fieldValidation =
-      CommonValidator.checkCollectionFields<ProjectsModel>(
-        this.validFields,
-        project
-      );
+    const fieldValidation = CommonValidator.checkCollectionFields<ProjectModel>(
+      this.validFields,
+      project
+    );
 
     if (fieldValidation) return { ...fieldValidation };
 
@@ -75,7 +74,7 @@ export default class ProjectValidator implements CoreValidator {
     if (relatedTasksValidation) return relatedTasksValidation;
 
     if (isUpdate) {
-      return CommonValidator.checkExistingRecordOnUpdate<ProjectsModel>(
+      return CommonValidator.checkExistingRecordOnUpdate<ProjectModel>(
         this.projectService,
         project._id
       );

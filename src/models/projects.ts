@@ -1,6 +1,6 @@
 import { ObjectId } from 'mongodb';
 
-export default interface ProjectsModel {
+export default interface ProjectModel {
   _id: ObjectId;
   title: string;
   description: string;

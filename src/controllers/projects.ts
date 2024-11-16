@@ -1,5 +1,5 @@
 import { ObjectId } from 'mongodb';
-import { ProjectsModel } from '../models';
+import { ProjectModel } from '../models';
 import { Request, Response } from 'express';
 import { ProjectService } from '../services';
 import { CoreValidator } from '../validators/core';
@@ -15,7 +15,7 @@ export default class ProjectController {
 
   async create(req: Request, res: Response) {
     try {
-      const newProject = req.body.project as ProjectsModel;
+      const newProject = req.body.project as ProjectModel;
 
       const { status, message } = await this.validator.validate(newProject);
 
