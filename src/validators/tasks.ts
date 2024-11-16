@@ -12,6 +12,7 @@ export default class TaskValidator implements CoreValidator {
     'description',
     'status',
     'startDate',
+    'doneDate',
     'dueDate',
   ];
 
