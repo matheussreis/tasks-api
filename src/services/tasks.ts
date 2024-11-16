@@ -68,6 +68,20 @@ export default class TaskService implements CoreService<TaskModel> {
     return !!task;
   }
 
+  async belongsToAnotherProject(taskId: ObjectId, projectId?: ObjectId) {
+    const projectsCollection = await this.getProjectsCollection();
+
+    const filter: any = { tasks: taskId };
+
+    if (projectId) {
+      filter._id = { $ne: projectId };
+    }
+
+    const projects = await projectsCollection.find(filter).toArray();
+
+    return projects.length > 0;
+  }
+
   async getById(id: ObjectId) {
     const collection = await this.getTasksCollection();
     return await collection.findOne({ _id: id });

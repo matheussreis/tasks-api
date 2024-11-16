@@ -22,7 +22,10 @@ export default class ProjectValidator implements CoreValidator {
     'tasks',
   ];
 
-  private async checkRelatedTasks(taskIds: Array<ObjectId>) {
+  private async checkRelatedTasks(project: ProjectModel) {
+    const projectId: ObjectId = project._id;
+    const taskIds: Array<ObjectId> = project.tasks;
+
     if (!taskIds) {
       return null;
     }
@@ -45,6 +48,15 @@ export default class ProjectValidator implements CoreValidator {
         return {
           status: 404,
           message: `Related task "${taskObjId.toString()}" not found.`,
+        };
+      }
+
+      const belongsToAnotherProject =
+        await this.taskService.belongsToAnotherProject(taskObjId, projectId);
+      if (belongsToAnotherProject) {
+        return {
+          status: 400,
+          message: `Related task is already assigned to a different project.`,
         };
       }
     }
@@ -70,7 +82,7 @@ export default class ProjectValidator implements CoreValidator {
 
     if (fieldValidation) return { ...fieldValidation };
 
-    const relatedTasksValidation = await this.checkRelatedTasks(project.tasks);
+    const relatedTasksValidation = await this.checkRelatedTasks(project);
     if (relatedTasksValidation) return relatedTasksValidation;
 
     if (isUpdate) {
