@@ -2,14 +2,19 @@
   "name": "tasks-api",
   "version": "1.0.0",
   "description": "Technical Interview - Part 1",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "start": "tsc && node dist/index.js"
+    "start": "tsc && node dist/server.js"
   },
   "author": "Matheus Reis",
   "license": "MIT",
   "private": true,
   "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.9.0",
     "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "express": "^4.21.1"
   }
 }
