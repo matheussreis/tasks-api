@@ -40,20 +40,33 @@ export default class ProjectController {
 
   async list(req: Request, res: Response) {
     try {
+      let filter = {};
+      const title = req?.query.title && `${req.query.title}`.trim();
       const limit = Number(req?.query.limit ?? 15);
       const offset = Number(req?.query.offset ?? 0);
       const order = req?.query.order ?? 'desc';
       const by = req?.query.by ?? 'startDate';
+
+      if (title && title.length > 0) {
+        filter = { title: { $regex: new RegExp(title, 'i') } };
+      }
 
       const orderBy = {
         field: by,
         order: order,
       } as ProjectOrderBy;
 
-      const projects = await this.service.list(limit, offset, orderBy);
-      res
-        .status(200)
-        .json({ count: projects.length, projects: { ...projects } });
+      const projects = await this.service.list({
+        limit,
+        offset,
+        orderBy,
+        filter,
+      });
+
+      res.status(200).json({
+        count: projects.length,
+        projects: { ...projects },
+      });
     } catch (error) {
       res.status(500).json({ message: 'Error fetching projects.' });
     }
