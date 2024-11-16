@@ -4,6 +4,7 @@ import { OrderBy } from '../services/core';
 import { Request, Response } from 'express';
 import { StatusEnum } from '../models/tasks';
 import { CoreValidator } from '../validators/core';
+import { TaskValidator } from '../validators';
 
 type TaskOrderBy = OrderBy & {
   fields: 'startDate' | 'doneDate' | 'dueDate';
@@ -44,9 +45,25 @@ export default class TaskController {
       const offset = Number(req?.query.offset ?? 0);
       const order = req?.query.order ?? 'desc';
       const by = req?.query.by ?? 'startDate';
+      const status = req?.query.status && `${req.query.status}`.trim();
 
       if (title && title.length > 0) {
         filter = { title: { $regex: new RegExp(title, 'i') } };
+      }
+
+      if (status && status.length > 0) {
+        const statusValidation = TaskValidator.checkStatus(
+          status as StatusEnum
+        );
+
+        if (statusValidation) {
+          res.status(statusValidation.status).json({
+            message: statusValidation.message,
+          });
+          return;
+        }
+
+        filter = { status: { $eq: status } };
       }
 
       const orderBy = {
@@ -117,9 +134,10 @@ export default class TaskController {
         return;
       }
 
-      if (Object.values(StatusEnum).includes(status) === false) {
-        res.status(400).json({
-          message: 'Status must be either "to-do" or "done"',
+      const statusValidation = TaskValidator.checkStatus(status as StatusEnum);
+      if (statusValidation) {
+        res.status(statusValidation.status).json({
+          message: statusValidation.message,
         });
         return;
       }

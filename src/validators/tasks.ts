@@ -21,6 +21,17 @@ export default class TaskValidator implements CoreValidator {
     this.service = service;
   }
 
+  static checkStatus(status: string) {
+    if (Object.values(StatusEnum).includes(status as StatusEnum) === false) {
+      return {
+        status: 400,
+        message: 'Status must be either "to-do" or "done"',
+      };
+    }
+
+    return null;
+  }
+
   async validate(
     task: TaskModel,
     isUpdate: boolean = false
@@ -46,14 +57,11 @@ export default class TaskValidator implements CoreValidator {
       );
     }
 
-    if (
-      Object.values(StatusEnum).includes(task.status as StatusEnum) === false
-    ) {
-      return {
-        status: 400,
-        message: 'Status must be either "to-do" or "done"',
-      };
-    }
+    const statusValidation = TaskValidator.checkStatus(
+      task.status as StatusEnum
+    );
+
+    if (statusValidation) return { ...statusValidation };
 
     const requiredFieldErrors = [
       CommonValidator.validateRequiredField(task.title, 'Title'),
