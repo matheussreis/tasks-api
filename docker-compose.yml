@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  tasks-api-db:
+    image: mongodb/mongodb-community-server:latest
+    container_name: tasks-api-db
+    volumes:
+      - db:/data/db
+    environment:
+      MONGODB_INITDB_ROOT_USERNAME: example
+      MONGODB_INITDB_ROOT_PASSWORD: example
+    ports:
+      - 27017:27017
+
+volumes:
+  db:
