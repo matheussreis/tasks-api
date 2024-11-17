@@ -1,0 +1,917 @@
+{
+	"info": {
+		"_postman_id": "71ce2a65-5a75-428c-b06e-448799f9dd19",
+		"name": "tasks-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29901725"
+	},
+	"item": [
+		{
+			"name": "tasks",
+			"item": [
+				{
+					"name": "Create Task",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"task\": {\r\n        \"title\": \"ABC TEST 241116 V2\",\r\n        \"description\": \"This is a test\",\r\n        \"status\": \"to-do\",\r\n        \"startDate\": \"2024-11-10\",\r\n        \"dueDate\": \"2024-12-20\",\r\n        \"doneDate\": \"2024-12-16\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/task/",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"task",
+								""
+							]
+						},
+						"description": "### API Request Description\n\nThis endpoint allows the client to create a new task by sending a POST request to the specified URL.\n\n### API Response (JSON Schema)\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"title\": { \"type\": \"string\" },\n    \"description\": { \"type\": \"string\" },\n    \"status\": { \"type\": \"string\" },\n    \"startDate\": { \"type\": \"string\" },\n    \"dueDate\": { \"type\": \"string\" },\n    \"doneDate\": { \"type\": \"string\" },\n    \"_id\": { \"type\": \"string\" }\n  }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Tasks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/task/?limit=20&offset=0&order=desc&by=startDate&status=to-do",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"task",
+								""
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "20"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "order",
+									"value": "desc"
+								},
+								{
+									"key": "by",
+									"value": "startDate"
+								},
+								{
+									"key": "status",
+									"value": "to-do"
+								}
+							]
+						},
+						"description": "This endpoint makes an HTTP GET request to localhost:3000/api/task/ to retrieve a list of tasks. The request includes query parameters for limiting the number of results, setting the offset, specifying the order, sorting by a particular field, and filtering by status.\n\n### Request Parameters\n\n- `limit` (number): The maximum number of tasks to be returned.\n    \n- `offset` (number): The offset for paginating through the results.\n    \n- `order` (string): The order in which the tasks are sorted (e.g., \"asc\" or \"desc\").\n    \n- `by` (string): The field by which the tasks are sorted.\n    \n- `status` (string): The status of the tasks to be filtered.\n    \n\n### Response\n\nUpon a successful execution, the server responds with a status code of 200 and a JSON object containing the total count of tasks and an array of task objects. Each task object includes the following properties:\n\n- `_id` (string): The unique identifier of the task.\n    \n- `title` (string): The title of the task.\n    \n- `description` (string): The description of the task.\n    \n- `status` (string): The status of the task.\n    \n- `startDate` (string): The start date of the task.\n    \n- `dueDate` (string): The due date of the task.\n    \n- `doneDate` (string): The completion date of the task.\n    \n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"count\": {\n      \"type\": \"integer\"\n    },\n    \"tasks\": {\n      \"type\": \"object\",\n      \"patternProperties\": {\n        \"^[0-9]+$\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"_id\": {\n              \"type\": \"string\"\n            },\n            \"title\": {\n              \"type\": \"string\"\n            },\n            \"description\": {\n              \"type\": \"string\"\n            },\n            \"status\": {\n              \"type\": \"string\"\n            },\n            \"startDate\": {\n              \"type\": \"string\",\n              \"format\": \"date-time\"\n            },\n            \"dueDate\": {\n              \"type\": \"string\",\n              \"format\": \"date-time\"\n            },\n            \"doneDate\": {\n              \"type\": \"string\",\n              \"format\": \"date-time\"\n            }\n          },\n          \"additionalProperties\": false\n        }\n      },\n      \"additionalProperties\": false\n    }\n  },\n  \"required\": [\"count\", \"tasks\"]\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "Get All Tasks (Paginated by Default)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/api/task/",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"task",
+										""
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "Get All Tasks (Manually Paginated)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/api/task/?limit=20&offset=0",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"task",
+										""
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "20",
+											"description": "The pagination limit."
+										},
+										{
+											"key": "offset",
+											"value": "0",
+											"description": "The pagination offset."
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "Get All Tasks by Ascending Start Date",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/api/task/?order=asc&by=startDate",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"task",
+										""
+									],
+									"query": [
+										{
+											"key": "order",
+											"value": "asc",
+											"description": "The order to sort the results by."
+										},
+										{
+											"key": "by",
+											"value": "startDate",
+											"description": "The date field to sort the results by."
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "Find Tasks By Title (Manually Paginated)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/api/task/?limit=20&offset=0&order=asc&by=startDate&title=Test",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"task",
+										""
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "20",
+											"description": "The pagination limit."
+										},
+										{
+											"key": "offset",
+											"value": "0",
+											"description": "The pagination offset."
+										},
+										{
+											"key": "order",
+											"value": "asc",
+											"description": "The order to sort the results by."
+										},
+										{
+											"key": "by",
+											"value": "startDate",
+											"description": "The date field to sort the results by."
+										},
+										{
+											"key": "title",
+											"value": "Test",
+											"description": "The task title to search for."
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "Get All Tasks By Status (Manually Paginated)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/api/task/?limit=20&offset=0&order=desc&by=startDate&status=to-do",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"task",
+										""
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "20"
+										},
+										{
+											"key": "offset",
+											"value": "0"
+										},
+										{
+											"key": "order",
+											"value": "desc"
+										},
+										{
+											"key": "by",
+											"value": "startDate"
+										},
+										{
+											"key": "status",
+											"value": "to-do"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Delete Task",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/task/:taskId",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"task",
+								":taskId"
+							],
+							"variable": [
+								{
+									"key": "taskId",
+									"value": "67391331f7096f6f7715336b"
+								}
+							]
+						},
+						"description": "The API endpoint sends an HTTP DELETE request to localhost:3000/api/task/:taskId to delete a specific task identified by the taskId parameter.\n\n### Response\n\nThe response returned has a status code of 200 and a content type of application/json. The response body follows the JSON schema:\n\n``` json\n{\n    \"type\": \"object\",\n    \"properties\": {\n        \"message\": {\n            \"type\": \"string\"\n        }\n    }\n}\n\n ```\n\nThe response includes a message property of type string."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Task",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"task\": {\r\n        \"title\": \"Updated Task XYZ\" \r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/task/:taskId",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"task",
+								":taskId"
+							],
+							"variable": [
+								{
+									"key": "taskId",
+									"value": "6738d504e0bec8cddc58780c"
+								}
+							]
+						},
+						"description": "This endpoint allows updating a specific task identified by the taskId in the URL. The request should be a HTTP PUT to localhost:3000/api/task/:taskId with a JSON payload containing the updated task data.\n\n### Response\n\nThe response will have a status code of 404 and a JSON content type. The response body will be in the following format:\n\n``` json\n{\n  \"message\": \"\"\n}\n\n ```\n\n#### JSON Schema\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"message\": {\n      \"type\": \"string\"\n    }\n  }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Change Status",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/task/:id/change/:status",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"task",
+								":id",
+								"change",
+								":status"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "6738b3790123586086a2f778"
+								},
+								{
+									"key": "status",
+									"value": "done"
+								}
+							]
+						},
+						"description": "The endpoint allows you to update the status of a task with the specified ID. Upon a successful request, the response will be in JSON format with the following schema:\n\n``` json\n{\n    \"_id\": \"\",\n    \"title\": \"\",\n    \"description\": \"\",\n    \"status\": \"\",\n    \"startDate\": \"\",\n    \"dueDate\": \"\",\n    \"doneDate\": \"\"\n}\n\n ```\n\nThis schema represents the structure of the task object, with each property indicating the details of the task such as ID, title, description, status, start date, due date, and completion date."
+					},
+					"response": [
+						{
+							"name": "Change Status to Done",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/api/task/:id/change/:status",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"task",
+										":id",
+										"change",
+										":status"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "6738b3790123586086a2f778"
+										},
+										{
+											"key": "status",
+											"value": "done"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "Change Status to To-Do",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/api/task/:id/change/:status",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"task",
+										":id",
+										"change",
+										":status"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "6738b3790123586086a2f778"
+										},
+										{
+											"key": "status",
+											"value": "to-do"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "projects",
+			"item": [
+				{
+					"name": "Create Project",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"project\": {\r\n        \"title\": \"PROJECT TEST 241116 V2\",\r\n        \"description\": \"SW project description\",\r\n        \"tasks\": [\r\n            \"6738ff1a89f4fffed5e1e461\",\r\n            \"6738feeda04bd74529d7797b\"\r\n        ],\r\n        \"startDate\": \"2024-11-16\",\r\n        \"dueDate\": \"2024-11-30\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/project/",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"project",
+								""
+							]
+						},
+						"description": "### Create a New Project\n\nThis endpoint allows the user to create a new project.\n\n#### Request Body\n\n- `project` (object)\n    \n    - `title` (string): The title of the project.\n        \n    - `description` (string): Description of the project.\n        \n    - `tasks` (array): An array of task IDs associated with the project.\n        \n    - `startDate` (string): Start date of the project.\n        \n    - `dueDate` (string): Due date of the project.\n        \n\n#### Response (400 - Bad Request)\n\nThe response will be in JSON format with the following schema:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"message\": {\n      \"type\": \"string\"\n    }\n  }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Projects",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/project/?limit=20&offset=0&order=asc&by=startDate",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"project",
+								""
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "20"
+								},
+								{
+									"key": "offset",
+									"value": "0"
+								},
+								{
+									"key": "order",
+									"value": "asc"
+								},
+								{
+									"key": "by",
+									"value": "startDate"
+								}
+							]
+						},
+						"description": "### GET /api/project\n\nThis endpoint retrieves a list of projects with optional pagination and ordering.\n\n#### Request Parameters\n\n- `limit` (integer, optional): The maximum number of projects to retrieve.\n    \n- `offset` (integer, optional): The number of projects to skip before starting to return projects.\n    \n- `order` (string, optional): The order in which the projects should be returned (e.g., \"asc\" or \"desc\").\n    \n- `by` (string, optional): The field by which the projects should be ordered.\n    \n\n#### Response\n\n- Status: 200\n    \n- Content-Type: application/json\n    \n\nExample Response Body:\n\n``` json\n{\n    \"count\": 0,\n    \"projects\": [\n        {\n            \"_id\": \"\",\n            \"title\": \"\",\n            \"description\": \"\",\n            \"tasks\": [\"\"],\n            \"startDate\": \"\",\n            \"dueDate\": \"\"\n        }\n    ]\n}\n\n ```\n\nThe response returned is a JSON object with a \"count\" field indicating the total number of projects and a \"projects\" field containing an array of project objects. Each project object includes \"_id\", \"title\", \"description\", \"tasks\", \"startDate\", and \"dueDate\" fields.\n\nHere is a JSON schema representing the structure of the response:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"count\": {\n      \"type\": \"integer\"\n    },\n    \"projects\": {\n      \"type\": \"object\",\n      \"patternProperties\": {\n        \"^[0-9]+$\": {\n          \"type\": \"object\",\n          \"properties\": {\n            \"_id\": {\n              \"type\": \"string\"\n            },\n            \"title\": {\n              \"type\": \"string\"\n            },\n            \"description\": {\n              \"type\": \"string\"\n            },\n            \"tasks\": {\n              \"type\": \"array\",\n              \"items\": {\n                \"type\": \"string\"\n              }\n            },\n            \"startDate\": {\n              \"type\": \"string\",\n              \"format\": \"date-time\"\n            },\n            \"dueDate\": {\n              \"type\": \"string\",\n              \"format\": \"date-time\"\n            }\n          },\n          \"required\": [\"_id\", \"title\", \"description\", \"tasks\", \"startDate\", \"dueDate\"]\n        }\n      }\n    }\n  },\n  \"required\": [\"count\", \"projects\"]\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "Get All Projects (Paginated by Default)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/api/project/",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"project",
+										""
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "Get All Projects (Manually Paginated)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/api/project/?limit=20&offset=0",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"project",
+										""
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "20",
+											"description": "The pagination limit."
+										},
+										{
+											"key": "offset",
+											"value": "0",
+											"description": "The pagination offset."
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "Get All Projects by Ascending Start Date",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/api/project/?order=asc&by=startDate",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"project",
+										""
+									],
+									"query": [
+										{
+											"key": "order",
+											"value": "asc",
+											"description": "The order to sort the results by."
+										},
+										{
+											"key": "by",
+											"value": "startDate",
+											"description": "The date field to sort the results by."
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "Find Projects By Title",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/api/project/?limit=20&offset=0&order=asc&by=startDate&title=Project",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"project",
+										""
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "20",
+											"description": "The pagination limit."
+										},
+										{
+											"key": "offset",
+											"value": "0",
+											"description": "The pagination offset."
+										},
+										{
+											"key": "order",
+											"value": "asc",
+											"description": "The order to sort the results by."
+										},
+										{
+											"key": "by",
+											"value": "startDate",
+											"description": "The date field to sort the results by."
+										},
+										{
+											"key": "title",
+											"value": "Project",
+											"description": "The project title to search for."
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Get Tasks By Name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/project/tasks-by-name?limit=20&offset=0&order=asc&by=startDate&title=Project",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"project",
+								"tasks-by-name"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "20",
+									"description": "The pagination limit."
+								},
+								{
+									"key": "offset",
+									"value": "0",
+									"description": "The pagination offset."
+								},
+								{
+									"key": "order",
+									"value": "asc",
+									"description": "The order to sort the results by."
+								},
+								{
+									"key": "by",
+									"value": "startDate",
+									"description": "The date field to sort the results by."
+								},
+								{
+									"key": "title",
+									"value": "Project",
+									"description": "The project title to search for tasks."
+								}
+							]
+						},
+						"description": "The endpoint localhost:3000/api/project/tasks-by-name allows users to retrieve tasks by name with options to limit the number of results, set an offset, specify the order, and sort by a particular attribute.\n\nThe response returned is a JSON object with key-value pairs where the key is the unique identifier for a project and the value is an object containing the project title and an array of tasks. Each task in the array contains properties such as _id, title, description, status, startDate, dueDate, and doneDate.\n\nHere is the JSON schema for the response:\n\n``` json\n{\n  \"type\": \"object\",\n  \"properties\": {\n    \"projectId\": {\n      \"type\": \"object\",\n      \"properties\": {\n        \"title\": { \"type\": \"string\" },\n        \"tasks\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"object\",\n            \"properties\": {\n              \"_id\": { \"type\": \"string\" },\n              \"title\": { \"type\": \"string\" },\n              \"description\": { \"type\": \"string\" },\n              \"status\": { \"type\": \"string\" },\n              \"startDate\": { \"type\": \"string\" },\n              \"dueDate\": { \"type\": \"string\" },\n              \"doneDate\": { \"type\": \"string\" }\n            }\n          }\n        }\n      }\n    }\n  }\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "Get Tasks By Name (Paginated by Default)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/api/project/tasks-by-name?title=Test",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"project",
+										"tasks-by-name"
+									],
+									"query": [
+										{
+											"key": "title",
+											"value": "Test",
+											"description": "The project title to search for tasks."
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "Get Tasks By Name  (Manually Paginated)",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/api/project/tasks-by-name?title=Test&limit=20&offset=0",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"project",
+										"tasks-by-name"
+									],
+									"query": [
+										{
+											"key": "title",
+											"value": "Test",
+											"description": "The project title to search for tasks."
+										},
+										{
+											"key": "limit",
+											"value": "20",
+											"description": "The pagination limit."
+										},
+										{
+											"key": "offset",
+											"value": "0",
+											"description": "The pagination offset."
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "Get Tasks By Name in Ascending Start Date",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/api/project/tasks-by-name?title=Test&order=asc&by=startDate",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"project",
+										"tasks-by-name"
+									],
+									"query": [
+										{
+											"key": "title",
+											"value": "Test",
+											"description": "The project title to search for tasks."
+										},
+										{
+											"key": "order",
+											"value": "asc",
+											"description": "The order to sort the results by."
+										},
+										{
+											"key": "by",
+											"value": "startDate",
+											"description": "The date field to sort the results by."
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "Delete Project",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/project/:projectId",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"project",
+								":projectId"
+							],
+							"variable": [
+								{
+									"key": "projectId",
+									"value": "67391366f7096f6f7715336d"
+								}
+							]
+						},
+						"description": "This endpoint sends an HTTP DELETE request to localhost:3000/api/project/:projectId to delete a specific project.\n\n### Response\n\nThe response returns a status code of 200 and a JSON object with the following schema:\n\n``` json\n{\n    \"type\": \"object\",\n    \"properties\": {\n        \"message\": {\n            \"type\": \"string\"\n        }\n    }\n}\n\n ```\n\nThe response contains a \"message\" key with a string value."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Project",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"project\": {\r\n        \"title\": \"Project AXX\",\r\n        \"description\": \"SW project description XX\",\r\n        \"tasks\": [\r\n            \"6738b3790123586086a2f778\"\r\n        ]\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/project/:projectId",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"project",
+								":projectId"
+							],
+							"variable": [
+								{
+									"key": "projectId",
+									"value": "6738dadf0dc12beb468f9ff2"
+								}
+							]
+						},
+						"description": "This endpoint allows the user to update a specific project identified by the projectId in the URL. The request should include a payload with the project's title, description, and an array of task IDs.\n\n### Request Body\n\n- **Type**: JSON\n    \n- **Attributes**:\n    \n    - project (object)\n        \n        - title (string)\n            \n        - description (string)\n            \n        - tasks (array of strings)\n            \n\n### Response\n\nThe response of this request is a JSON schema with the following structure:\n\n``` json\n{\n    \"type\": \"object\",\n    \"properties\": {\n        \"message\": {\n            \"type\": \"string\"\n        }\n    }\n}\n\n ```"
+					},
+					"response": []
+				},
+				{
+					"name": "Assign Task",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/project/:projectId/assign/:taskId",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"project",
+								":projectId",
+								"assign",
+								":taskId"
+							],
+							"variable": [
+								{
+									"key": "projectId",
+									"value": "6738dadf0dc12beb468f9ff2"
+								},
+								{
+									"key": "taskId",
+									"value": "6738b3790123586086a2f778"
+								}
+							]
+						},
+						"description": "The endpoint allows you to assign a task to a project by sending an HTTP PUT request to localhost:3000/api/project/:projectId/assign/:taskId. Upon successful execution, the response will have a status code of 200 and a Content-Type of application/json. The response body will be a JSON object with a \"message\" key, the value of which will be a string."
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
