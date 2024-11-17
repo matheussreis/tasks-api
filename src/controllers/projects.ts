@@ -194,6 +194,18 @@ export default class ProjectController {
         return;
       }
 
+      const belongsToAnotherProject =
+        await this.taskService.belongsToAnotherProject(
+          taskObjectId,
+          projectObjectId
+        );
+      if (belongsToAnotherProject) {
+        res.status(400).json({
+          message: `Related task is already assigned to a different project.`,
+        });
+        return;
+      }
+
       project.tasks.push(taskObjectId);
       const updatedProject = await this.projectService.update(project);
 
