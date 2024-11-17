@@ -1,13 +1,16 @@
 # Tasks API
 
+This project is a task management API that enables users to efficiently manage tasks and their associated projects. It provides endpoints to create, update, delete, and organize tasks, as well as manage projects and assign tasks to them.
+
 ## Table of Contents
 
 1. [To-Do](#to-do)
    - [Tasks](#tasks)
    - [Projects](#projects)
 2. [Getting Started](#getting-started)
+   - [Starting MongoDB with Docker](#starting-mongodb-with-docker)
    - [Environment Variable Setup](#environment-variable-setup)
-   - [Running the Project](#running-the-project)
+   - [Starting the Project](#starting-the-project)
 
 ## To-Do
 
@@ -48,9 +51,17 @@ Create endpoints for managing projects. Tasks can now be assigned to a project.
 
 ## Getting Started
 
+### Starting MongoDB with Docker
+
+If you don't have a MongoDB instance running locally, you can easily use Docker to create a container for this application's database. After installing Docker and setting it up on your machine, navigate to the project's root directory (where the compose.yaml file is located) in your terminal, and run the following command:
+
+```bash
+docker-compose up
+```
+
 ### Environment Variable Setup
 
-Before running the API project, you'll need to configure your environment variables to connect to MongoDB. Follow these steps:
+Before starting the API server, you'll need to configure your environment variables to connect to MongoDB. To do that, you can follow the steps below:
 
 **1.** Create a `.env` file from the `.env.example` template by running the following command in your terminal:
 
@@ -60,8 +71,6 @@ cp .env.example .env
 
 **2.** Edit the .env file you just created and replace the placeholder values with your MongoDB connection details. The database name can remain as todoList for now, but make sure to update the connection string.
 
-**Important: The key step is updating the MongoDB connection string; the database name is secondary at this stage.**
-
 Here’s a table to help you understand the required variables:
 
 | Key                     | Description                                              |
@@ -69,7 +78,9 @@ Here’s a table to help you understand the required variables:
 | MONGO_CONNECTION_STRING | The MongoDB connection string.                           |
 | MONGO_CONNECTION_STRING | The name of your MongoDB database `(default: todoList)`. |
 
-### Running the Project
+**Note:** If you choose to use Docker for the MongoDB database, ensure that the connection details match those specified in the `docker-compose.yaml` file.
+
+### Starting the Project
 
 Once your environment variables are set up, you can start the project in development mode by running:
 
