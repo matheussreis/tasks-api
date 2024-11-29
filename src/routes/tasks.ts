@@ -7,6 +7,8 @@ const taskController = makeTaskController();
 
 router.get('/', (req, res) => taskController.list(req, res));
 
+router.get('/:id', (req, res) => taskController.getById(req, res));
+
 router.post('/', (req, res) => taskController.create(req, res));
 
 router.put('/:id', (req, res) => taskController.update(req, res));
